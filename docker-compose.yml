@@ -1,15 +1,31 @@
 version: '3'
 services:
+
   db:
     container_name: 'app_pg'
     image: 'postgres:12.6'
     ports:
       - 5432:5432
     environment:
-      POSTGRES_USER: "$USER"
+      POSTGRES_USER: test_username
+      POSTGRES_DB: dev
       POSTGRES_HOST_AUTH_METHOD: "trust"
+
   redis:
     container_name: 'app_redis'
     image: "redis:4.0"
     ports:
       - 6379:6379
+
+  web:
+    container_name: 'web_server'
+    build: .
+    command: bundle exec rails s -b '0.0.0.0' -p 3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      DATABASE_URL: postgres://test_username@db:5432/dev 
+      REDIS_URL: redis://redis:6379/0
