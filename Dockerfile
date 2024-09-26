@@ -22,7 +22,7 @@ ADD . /docker/app
 RUN bundle install
 
 # Remove node_modules to avoid incop issues then install js deps
-RUN rm -rf node_modules yarn
+RUN rm -rf node_modules
 RUN yarn
 
 # Remove node_modules compiled assets locall then precompile assets again 

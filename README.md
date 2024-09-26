@@ -7,3 +7,8 @@
 ```
 $ docker-compose up
 ```
+
+2. use browser and then go to app. ~will compile at first load
+```
+$ http://localhost:3000/spa
+```
