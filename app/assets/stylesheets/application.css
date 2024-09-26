@@ -38,3 +38,32 @@ body {
   margin: 0px;
   box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.1);
 }
+
+.chat-inputs-container {
+  background-color: #2F2F2F;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.chat-inputs-container textarea {
+  background-color: transparent;
+  outline: none;
+  border: none;
+  color: #676767;
+  resize: none;
+}
+
+.chat-inputs-area-inner {
+  padding-top: 30px;
+  padding-left: 150px;
+  padding-right: 150px;
+}
+
+.chat-inputs-area-button {
+  border-radius: 100%;
+  background-color: transparent;
+  width: max-content;
+  box-shadow: none;
+  border: none;
+  color: #676767;
+}

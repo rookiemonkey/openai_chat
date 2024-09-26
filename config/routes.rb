@@ -3,4 +3,7 @@ Rails.application.routes.draw do
 
   # expose the react fe
   get "spa", to: "spa#index"
+  
+  # expose apis
+  post "api/send_messages", to: "api#send_messages"
 end
