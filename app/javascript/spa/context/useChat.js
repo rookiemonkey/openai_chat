@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useCallback, useState, useMemo, useRef } from "react";
-import sendUserMessage from "../api/sendUserMessage";
+import { useWs } from "./useWs";
 
 const ChatApiContext = createContext(
   {}
@@ -14,7 +14,9 @@ const ChatNewUserMessageContext = createContext(
 );
 
 export default function ChatProvider({ children }) {
-  const [messages, setMessages] = useState([])
+  const ws = useWs();
+  const [messages, setMessages] = useState([]);
+  const [isStreaming, setIsStreaming] = useState(false);
 
   const textareaRef = useRef(HTMLTextAreaElement)
   const [newUserMessage, setNewUserMessage] = useState("")
@@ -30,9 +32,10 @@ export default function ChatProvider({ children }) {
 
   const memoizedMessages = useMemo(
     () => ({
+      isStreaming,
       messages
     }),
-    [messages]
+    [messages, isStreaming]
   )
 
   const handleResetInput = useCallback(() => {
@@ -42,12 +45,27 @@ export default function ChatProvider({ children }) {
     })
   }, [])
 
-  const handleSendUserMessage = useCallback(async userMessage => {
+  const handleSendUserMessage = useCallback(userMessage => {
     handleResetInput()
     const payload = { role: "user", content: userMessage }
     setMessages(v => [...v, payload])
-    // const assistantResponse = await sendUserMessage(userMessage)
-    // console.log(assistantResponse)
+    setIsStreaming(v => true)
+    
+    ws.send(JSON.stringify(
+      {
+        command: "message",
+        identifier: JSON.stringify(
+          {
+            channel: "OpenaiChatChannel"
+          }
+        ),
+        data: JSON.stringify(
+          {
+            message: userMessage
+          }
+        )
+      }
+    ))
   }, [])
 
 

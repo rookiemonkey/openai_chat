@@ -1,9 +1,6 @@
-module StreamingHelper
-  def test_respond_with_stream
-    begin
-      response.headers['Content-Type'] = 'text/event-stream'
-      response.headers['Cache-Control'] = 'no-cache'
-      response.headers['Transfer-Encoding'] = 'chunked'
+module ApplicationCable
+  module Helper
+    def test_broadcast(target)
       [
         {"id"=>"chatcmpl-ABlkNxmhqG4qvAw1w4fFLLgm6Ge85", "object"=>"chat.completion.chunk", "created"=>1727368511, "model"=>"gpt-3.5-turbo-0125", "system_fingerprint"=>nil, "choices"=>[{"index"=>0, "delta"=>{"role"=>"assistant", "content"=>"", "refusal"=>nil}, "logprobs"=>nil, "finish_reason"=>nil}]},
         {"id"=>"chatcmpl-ABlkNxmhqG4qvAw1w4fFLLgm6Ge85", "object"=>"chat.completion.chunk", "created"=>1727368511, "model"=>"gpt-3.5-turbo-0125", "system_fingerprint"=>nil, "choices"=>[{"index"=>0, "delta"=>{"content"=>"Why"}, "logprobs"=>nil, "finish_reason"=>nil}]},
@@ -21,18 +18,13 @@ module StreamingHelper
         {"id"=>"chatcmpl-ABlkNxmhqG4qvAw1w4fFLLgm6Ge85", "object"=>"chat.completion.chunk", "created"=>1727368511, "model"=>"gpt-3.5-turbo-0125", "system_fingerprint"=>nil, "choices"=>[{"index"=>0, "delta"=>{"content"=>"!"}, "logprobs"=>nil, "finish_reason"=>nil}]},
         {"id"=>"chatcmpl-ABlkNxmhqG4qvAw1w4fFLLgm6Ge85", "object"=>"chat.completion.chunk", "created"=>1727368511, "model"=>"gpt-3.5-turbo-0125", "system_fingerprint"=>nil, "choices"=>[{"index"=>0, "delta"=>{}, "logprobs"=>nil, "finish_reason"=>"stop"}]},
       ].each do |chunk|
-        response.stream.write chunk.dig("choices", 0, "delta", "content")
+        extracted_chunk = chunk.dig("choices", 0, "delta", "content")
+        ActionCable.server.broadcast(target, message: extracted_chunk) 
+        sleep 0.25
       end
-    ensure
-      response.stream.close
     end
-  end
 
-  def test_respond_with_stream_of_code
-    response.headers['Content-Type'] = 'text/event-stream'
-    response.headers['Cache-Control'] = 'no-cache'
-    response.headers['Transfer-Encoding'] = 'chunked'
-    begin
+    def test_broadcast_code(target)
       [
         {"id"=>"chatcmpl-ABlsGMtbFgrequ7as90U2TvV83HM4", "object"=>"chat.completion.chunk", "created"=>1727369000, "model"=>"gpt-3.5-turbo-0125", "system_fingerprint"=>nil, "choices"=>[{"index"=>0, "delta"=>{"role"=>"assistant", "content"=>"", "refusal"=>nil}, "logprobs"=>nil, "finish_reason"=>nil}]},
         {"id"=>"chatcmpl-ABlsGMtbFgrequ7as90U2TvV83HM4", "object"=>"chat.completion.chunk", "created"=>1727369000, "model"=>"gpt-3.5-turbo-0125", "system_fingerprint"=>nil, "choices"=>[{"index"=>0, "delta"=>{"content"=>"Sure"}, "logprobs"=>nil, "finish_reason"=>nil}]},
@@ -218,10 +210,10 @@ module StreamingHelper
         {"id"=>"chatcmpl-ABlsGMtbFgrequ7as90U2TvV83HM4", "object"=>"chat.completion.chunk", "created"=>1727369000, "model"=>"gpt-3.5-turbo-0125", "system_fingerprint"=>nil, "choices"=>[{"index"=>0, "delta"=>{"content"=>"!\"."}, "logprobs"=>nil, "finish_reason"=>nil}]},
         {"id"=>"chatcmpl-ABlsGMtbFgrequ7as90U2TvV83HM4", "object"=>"chat.completion.chunk", "created"=>1727369000, "model"=>"gpt-3.5-turbo-0125", "system_fingerprint"=>nil, "choices"=>[{"index"=>0, "delta"=>{}, "logprobs"=>nil, "finish_reason"=>"stop"}]}
       ].each do |chunk|
-        response.stream.write chunk.dig("choices", 0, "delta", "content")
+        extracted_chunk = chunk.dig("choices", 0, "delta", "content")
+        ActionCable.server.broadcast(target, message: extracted_chunk) 
+        sleep 0.25
       end
-    ensure
-      response.stream.close
     end
   end
 end
