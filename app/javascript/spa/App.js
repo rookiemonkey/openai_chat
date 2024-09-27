@@ -1,13 +1,16 @@
 import React from 'react';
-import SideNavigation from "./sideNavigation/SideNavigation";
-import Chat from "./chat/Chat";
+import SideNavigation from "./components/sideNavigation/SideNavigation";
+import Chat from "./components/chat/Chat";
+import ChatProvider from './context/useChat';
 
 const App = () => {
   return (
     <div className="container-fluid">
       <div className="row">
         <SideNavigation/>
-        <Chat/>
+        <ChatProvider>
+          <Chat/>
+        </ChatProvider>
       </div>
     </div>
   )

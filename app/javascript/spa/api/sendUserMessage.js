@@ -1,4 +1,4 @@
-export default async function sendUserMessage(userMessage) {
+export default async function sendUserMessage(userMessage, handleChunk) {
   const response = await fetch('/api/send_messages', { 
     method: "POST", 
     newUserMessage: {
@@ -9,17 +9,11 @@ export default async function sendUserMessage(userMessage) {
   const reader = response.body.getReader();
   const decoder = new TextDecoder();
 
-  let systemResponse = '';
   while (true) {
     const { done, value } = await reader.read();
     if (done) {
       break;
     }
-    systemResponse += decoder.decode(value, { stream: true });
+    handleChunk(decoder.decode(value, { stream: true }))
   }
-
-  console.log(systemResponse)
-  console.log('Streaming complete');
-
-  return systemResponse
 }

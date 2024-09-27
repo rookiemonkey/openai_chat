@@ -2,6 +2,8 @@ module StreamingHelper
   def test_respond_with_stream
     begin
       response.headers['Content-Type'] = 'text/event-stream'
+      response.headers['Cache-Control'] = 'no-cache'
+      response.headers['Transfer-Encoding'] = 'chunked'
       [
         {"id"=>"chatcmpl-ABlkNxmhqG4qvAw1w4fFLLgm6Ge85", "object"=>"chat.completion.chunk", "created"=>1727368511, "model"=>"gpt-3.5-turbo-0125", "system_fingerprint"=>nil, "choices"=>[{"index"=>0, "delta"=>{"role"=>"assistant", "content"=>"", "refusal"=>nil}, "logprobs"=>nil, "finish_reason"=>nil}]},
         {"id"=>"chatcmpl-ABlkNxmhqG4qvAw1w4fFLLgm6Ge85", "object"=>"chat.completion.chunk", "created"=>1727368511, "model"=>"gpt-3.5-turbo-0125", "system_fingerprint"=>nil, "choices"=>[{"index"=>0, "delta"=>{"content"=>"Why"}, "logprobs"=>nil, "finish_reason"=>nil}]},
@@ -28,6 +30,8 @@ module StreamingHelper
 
   def test_respond_with_stream_of_code
     response.headers['Content-Type'] = 'text/event-stream'
+    response.headers['Cache-Control'] = 'no-cache'
+    response.headers['Transfer-Encoding'] = 'chunked'
     begin
       [
         {"id"=>"chatcmpl-ABlsGMtbFgrequ7as90U2TvV83HM4", "object"=>"chat.completion.chunk", "created"=>1727369000, "model"=>"gpt-3.5-turbo-0125", "system_fingerprint"=>nil, "choices"=>[{"index"=>0, "delta"=>{"role"=>"assistant", "content"=>"", "refusal"=>nil}, "logprobs"=>nil, "finish_reason"=>nil}]},

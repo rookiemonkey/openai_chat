@@ -49,8 +49,9 @@ body {
   background-color: transparent;
   outline: none;
   border: none;
-  color: #676767;
+  color: #ECECEC;
   resize: none;
+  white-space: pre;
 }
 
 .chat-inputs-area-inner {
@@ -66,4 +67,27 @@ body {
   box-shadow: none;
   border: none;
   color: #676767;
+}
+
+.chat-content-area {
+  overflow: auto;
+  height: 550px;
+  overflow-x: hidden;
+  padding: 0 150px;
+}
+
+.user-chat-box {
+  background-color: #2F2F2F;
+  padding: 20px;
+  color: #ffffff;
+  /* text-align: right; doesn't look ok if with code */
+}
+
+.gpt-chat-box {
+  padding: 20px;
+  color: #ffffff;
+}
+
+.chat-icon {
+  margin-bottom: 5px;
 }
