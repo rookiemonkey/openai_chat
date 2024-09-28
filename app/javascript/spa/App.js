@@ -7,14 +7,14 @@ import ChatProvider from './context/useChat';
 const App = () => {
   return (
     <WsProvider>
-      <div className="container-fluid">
-        <div className="row">
-          <SideNavigation/>
-          <ChatProvider>
+      <ChatProvider>
+        <div className="container-fluid">
+          <div className="row">
+            <SideNavigation/>
             <Chat/>
-          </ChatProvider>
+          </div>
         </div>
-      </div>
+      </ChatProvider>
     </WsProvider>
   )
 }

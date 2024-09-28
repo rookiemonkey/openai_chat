@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useCallback, useState, useMemo, useRef } from "react";
-import { useWs } from "./useWs";
+import { useWsApi } from "./useWs";
 
 const ChatApiContext = createContext(
   {}
@@ -14,7 +14,7 @@ const ChatNewUserMessageContext = createContext(
 );
 
 export default function ChatProvider({ children }) {
-  const ws = useWs();
+  const { sendUserMessage, receiveAssistantMessage } = useWsApi();
   const [messages, setMessages] = useState([]);
   const [isStreaming, setIsStreaming] = useState(false);
 
@@ -55,26 +55,10 @@ export default function ChatProvider({ children }) {
     ]
     setMessages(v => [...v, ...payload])
     setIsStreaming(v => true)
-    
-    ws.send(JSON.stringify(
-      {
-        command: "message",
-        identifier: JSON.stringify(
-          {
-            channel: "OpenaiChatChannel"
-          }
-        ),
-        data: JSON.stringify(
-          {
-            message: userMessage
-          }
-        )
-      }
-    ))
 
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      const assistantMessage = data?.message?.message
+    sendUserMessage(userMessage)
+
+    receiveAssistantMessage(assistantMessage => {
       if (assistantMessage && assistantMessage !== "ENDOFSTREAM") {
         const parent = document.querySelector('.chat-content-area')
         const assistantMessageTextEl = parent.lastChild.querySelector(".chat-txt")
@@ -83,7 +67,7 @@ export default function ChatProvider({ children }) {
       if (assistantMessage === "ENDOFSTREAM") {
         setIsStreaming(v => false)
       }
-    };
+    })
   }, [])
 
 
