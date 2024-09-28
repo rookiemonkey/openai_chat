@@ -17,15 +17,6 @@ services:
     ports:
       - 6379:6379
 
-  webpack:
-    container_name: 'app_webpack'
-    build: .
-    command: ./bin/webpack-dev-server
-    volumes:
-      - '.:/docker/app'
-    ports:
-      - '3035:3035'
-
   web:
     container_name: 'web_server'
     build: .
