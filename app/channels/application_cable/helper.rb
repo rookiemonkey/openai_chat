@@ -20,8 +20,9 @@ module ApplicationCable
       ].each do |chunk|
         extracted_chunk = chunk.dig("choices", 0, "delta", "content")
         ActionCable.server.broadcast(target, message: extracted_chunk) 
-        sleep 0.25
+        sleep 0.05
       end
+      ActionCable.server.broadcast(target, message: "ENDOFSTREAM")
     end
 
     def test_broadcast_code(target)
@@ -212,8 +213,9 @@ module ApplicationCable
       ].each do |chunk|
         extracted_chunk = chunk.dig("choices", 0, "delta", "content")
         ActionCable.server.broadcast(target, message: extracted_chunk) 
-        sleep 0.25
+        sleep 0.05
       end
+      ActionCable.server.broadcast(target, message: "ENDOFSTREAM")
     end
   end
 end

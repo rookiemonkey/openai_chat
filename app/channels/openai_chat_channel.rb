@@ -9,6 +9,6 @@ class OpenaiChatChannel < ApplicationCable::Channel
   end
 
   def receive(data)
-    test_broadcast("open_ai_response")
+    test_broadcast_code("open_ai_response")
   end
 end

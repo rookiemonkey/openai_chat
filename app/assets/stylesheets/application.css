@@ -42,7 +42,8 @@ body {
 .chat-inputs-container {
   background-color: #2F2F2F;
   padding: 5px;
-  border-radius: 5px;
+  border-radius: 7px;
+  margin: 0;
 }
 
 .chat-inputs-container textarea {
@@ -80,6 +81,7 @@ body {
   background-color: #2F2F2F;
   padding: 20px;
   color: #ffffff;
+  border-radius: 7px;
   /* text-align: right; doesn't look ok if with code */
 }
 
