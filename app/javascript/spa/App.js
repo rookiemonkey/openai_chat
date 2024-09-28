@@ -4,19 +4,22 @@ import Chat from "./components/chat/Chat";
 import AuthProvider from './context/useAuth';
 import WsProvider from './context/useWs';
 import ChatProvider from './context/useChat';
+import ChatThreadProvider from './context/useChatThread';
 
 const App = () => {
   return (
     <AuthProvider>
       <WsProvider>
-        <ChatProvider>
-          <div className="container-fluid">
-            <div className="row">
-              <SideNavigation />
-              <Chat />
+        <ChatThreadProvider>
+          <ChatProvider>
+            <div className="container-fluid">
+              <div className="row">
+                <SideNavigation />
+                <Chat />
+              </div>
             </div>
-          </div>
-        </ChatProvider>
+          </ChatProvider>
+        </ChatThreadProvider>
       </WsProvider>
     </AuthProvider>
   )

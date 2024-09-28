@@ -1,8 +1,10 @@
 import React from 'react';
+import ChatThreads from './ChatThreads';
+
 const SideNavigation = () => {
   return (
-    <div className="side-nav col-lg-3 col-md-12">
-      <p>show chats here</p>
+    <div className="nav nav-pills side-nav col-lg-3 col-md-12 flex-column mb-auto">
+      <ChatThreads/>
     </div>
   )
 }

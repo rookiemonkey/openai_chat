@@ -10,10 +10,10 @@ const Messages = () => {
     <div className="chat-content-area">
 
       {
-        messages.map(m => {
+        messages.map((m,i) => {
           const message = m.content;
-          if (m.role == 'user') return <UserMessage message={message}/>
-          return <AssistantMessage message={message}/>
+          if (m.role == 'user') return <UserMessage key={i} message={message}/>
+          return <AssistantMessage key={i} message={message}/>
         })
       }
 

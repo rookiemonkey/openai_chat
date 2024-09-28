@@ -2,6 +2,7 @@ module ApplicationCable
   module Helper
     def test_broadcast(target_user_email)
       target_user = User.find_by(email: target_user_email)
+      assistant_message = ""
       [
         {"id"=>"chatcmpl-ABlkNxmhqG4qvAw1w4fFLLgm6Ge85", "object"=>"chat.completion.chunk", "created"=>1727368511, "model"=>"gpt-3.5-turbo-0125", "system_fingerprint"=>nil, "choices"=>[{"index"=>0, "delta"=>{"role"=>"assistant", "content"=>"", "refusal"=>nil}, "logprobs"=>nil, "finish_reason"=>nil}]},
         {"id"=>"chatcmpl-ABlkNxmhqG4qvAw1w4fFLLgm6Ge85", "object"=>"chat.completion.chunk", "created"=>1727368511, "model"=>"gpt-3.5-turbo-0125", "system_fingerprint"=>nil, "choices"=>[{"index"=>0, "delta"=>{"content"=>"Why"}, "logprobs"=>nil, "finish_reason"=>nil}]},
@@ -19,15 +20,22 @@ module ApplicationCable
         {"id"=>"chatcmpl-ABlkNxmhqG4qvAw1w4fFLLgm6Ge85", "object"=>"chat.completion.chunk", "created"=>1727368511, "model"=>"gpt-3.5-turbo-0125", "system_fingerprint"=>nil, "choices"=>[{"index"=>0, "delta"=>{"content"=>"!"}, "logprobs"=>nil, "finish_reason"=>nil}]},
         {"id"=>"chatcmpl-ABlkNxmhqG4qvAw1w4fFLLgm6Ge85", "object"=>"chat.completion.chunk", "created"=>1727368511, "model"=>"gpt-3.5-turbo-0125", "system_fingerprint"=>nil, "choices"=>[{"index"=>0, "delta"=>{}, "logprobs"=>nil, "finish_reason"=>"stop"}]},
       ].each do |chunk|
-        extracted_chunk = chunk.dig("choices", 0, "delta", "content")
-        OpenaiChatChannel.broadcast_to(target_user, message: extracted_chunk) 
-        sleep 0.05
+        content = chunk.dig("choices", 0, "delta", "content")
+        finish_reason = chunk.dig("choices", 0, "finish_reason")
+        if finish_reason == "stop"
+          OpenaiChatChannel.broadcast_to(target_user, message: "ENDOFSTREAM")
+        else
+          OpenaiChatChannel.broadcast_to(target_user, message: content)
+          assistant_message << (content.present? ? content : "")
+          sleep 0.05
+        end
       end
-      OpenaiChatChannel.broadcast_to(target, message: "ENDOFSTREAM")
+      assistant_message
     end
 
     def test_broadcast_code(target_user_email)
       target_user = User.find_by(email: target_user_email)
+      assistant_message = ""
       [
         {"id"=>"chatcmpl-ABlsGMtbFgrequ7as90U2TvV83HM4", "object"=>"chat.completion.chunk", "created"=>1727369000, "model"=>"gpt-3.5-turbo-0125", "system_fingerprint"=>nil, "choices"=>[{"index"=>0, "delta"=>{"role"=>"assistant", "content"=>"", "refusal"=>nil}, "logprobs"=>nil, "finish_reason"=>nil}]},
         {"id"=>"chatcmpl-ABlsGMtbFgrequ7as90U2TvV83HM4", "object"=>"chat.completion.chunk", "created"=>1727369000, "model"=>"gpt-3.5-turbo-0125", "system_fingerprint"=>nil, "choices"=>[{"index"=>0, "delta"=>{"content"=>"Sure"}, "logprobs"=>nil, "finish_reason"=>nil}]},
@@ -213,11 +221,17 @@ module ApplicationCable
         {"id"=>"chatcmpl-ABlsGMtbFgrequ7as90U2TvV83HM4", "object"=>"chat.completion.chunk", "created"=>1727369000, "model"=>"gpt-3.5-turbo-0125", "system_fingerprint"=>nil, "choices"=>[{"index"=>0, "delta"=>{"content"=>"!\"."}, "logprobs"=>nil, "finish_reason"=>nil}]},
         {"id"=>"chatcmpl-ABlsGMtbFgrequ7as90U2TvV83HM4", "object"=>"chat.completion.chunk", "created"=>1727369000, "model"=>"gpt-3.5-turbo-0125", "system_fingerprint"=>nil, "choices"=>[{"index"=>0, "delta"=>{}, "logprobs"=>nil, "finish_reason"=>"stop"}]}
       ].each do |chunk|
-        extracted_chunk = chunk.dig("choices", 0, "delta", "content")
-        OpenaiChatChannel.broadcast_to(target_user, message: extracted_chunk) 
-        sleep 0.05
+        content = chunk.dig("choices", 0, "delta", "content")
+        finish_reason = chunk.dig("choices", 0, "finish_reason")
+        if finish_reason == "stop"
+          OpenaiChatChannel.broadcast_to(target_user, message: "ENDOFSTREAM")
+        else
+          OpenaiChatChannel.broadcast_to(target_user, message: content)
+          assistant_message << (content.present? ? content : "")
+          sleep 0.05
+        end
       end
-      OpenaiChatChannel.broadcast_to(target_user, message: "ENDOFSTREAM")
+      assistant_message
     end
   end
 end

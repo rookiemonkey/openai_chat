@@ -46,7 +46,7 @@ export default function WsProvider({ children }) {
     ))
   }, [ws])
 
-  const sendUserMessage = useCallback(message => {
+  const sendUserMessage = useCallback(({ message, chatThreadId = "NEW" }) => {
     ws.send(JSON.stringify(
       {
         command: "message",
@@ -58,7 +58,8 @@ export default function WsProvider({ children }) {
         ),
         data: JSON.stringify(
           {
-            message: message
+            message: message,
+            chatThreadId
           }
         )
       }

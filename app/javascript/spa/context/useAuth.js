@@ -10,7 +10,7 @@ export default function AuthProvider({ children }) {
   let mockEmail = localStorage.getItem("mockEmail")
 
   if (!mockEmail) {
-    mockEmail = `mockuser+${Math.random().toString(36).substring(2, 15)}@gmail.com`
+    mockEmail = `mockuser__${Math.random().toString(36).substring(2, 15)}@gmail.com`
     localStorage.setItem("mockEmail", mockEmail)
   }
 

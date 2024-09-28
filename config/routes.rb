@@ -6,4 +6,7 @@ Rails.application.routes.draw do
 
   # expose the react fe
   get "/", to: "spa#index"
+
+  # expose api
+  get "/api/get_chat_threads", to: "api#get_chat_threads"
 end

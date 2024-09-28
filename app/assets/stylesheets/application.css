@@ -93,3 +93,7 @@ body {
 .chat-icon {
   margin-bottom: 5px;
 }
+
+.react-syntax-highlighter-line-number {
+  display: none !important;
+}

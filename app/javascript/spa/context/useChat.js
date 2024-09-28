@@ -56,18 +56,7 @@ export default function ChatProvider({ children }) {
     setMessages(v => [...v, ...payload])
     setIsStreaming(v => true)
 
-    sendUserMessage(userMessage)
-
-    receiveAssistantMessage(assistantMessage => {
-      if (assistantMessage && assistantMessage !== "ENDOFSTREAM") {
-        const parent = document.querySelector('.chat-content-area')
-        const assistantMessageTextEl = parent.lastChild.querySelector(".chat-txt")
-        assistantMessageTextEl.innerHTML = assistantMessageTextEl.innerHTML + assistantMessage
-      }
-      if (assistantMessage === "ENDOFSTREAM") {
-        setIsStreaming(v => false)
-      }
-    })
+    sendUserMessage({ message: userMessage })
   }, [])
 
 
