@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect } from "react";
+import { useAuth } from "./useAuth";
 
 const WsContext = createContext(
   {}
@@ -9,6 +10,7 @@ const WsApiContext = createContext(
 );
 
 export default function WsProvider({ children }) {
+  const { mockEmail } = useAuth()
   const ws = new WebSocket("ws://localhost:3000/cable")
 
   useEffect(() => {
@@ -22,7 +24,8 @@ export default function WsProvider({ children }) {
         command: "subscribe",
         identifier: JSON.stringify(
           {
-            channel: "OpenaiChatChannel"
+            channel: "OpenaiChatChannel",
+            email: mockEmail
           }
         )
       }
@@ -35,7 +38,8 @@ export default function WsProvider({ children }) {
         command: "unsubscribe",
         identifier: JSON.stringify(
           {
-            channel: "OpenaiChatChannel"
+            channel: "OpenaiChatChannel",
+            email: mockEmail
           }
         )
       }
@@ -48,7 +52,8 @@ export default function WsProvider({ children }) {
         command: "message",
         identifier: JSON.stringify(
           {
-            channel: "OpenaiChatChannel"
+            channel: "OpenaiChatChannel",
+            email: mockEmail
           }
         ),
         data: JSON.stringify(
