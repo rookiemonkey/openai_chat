@@ -12,8 +12,10 @@ const NewButton = () => {
   if (activeChatThreadId === "NEW") return null;
 
   return (
-    <button className="chat-inputs-area-button-new" onClick={handleClick} disabled={isStreaming}>
-      <i class="fas fa-plus"></i>
+    <button 
+      className={`chat-inputs-area-button-new ${isStreaming && "soft-disabled"}`} onClick={handleClick} 
+      disabled={isStreaming}
+    ><i class="fas fa-plus"></i>
     </button>
   )
 }

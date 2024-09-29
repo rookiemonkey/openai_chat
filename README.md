@@ -23,7 +23,7 @@ $ http://localhost:3000/
 # SOME POINTS
 
 #### CHANGED AN ENV VARIABLE?
-run ```docker-compose up --build``` to rebuild a new version
+run ```docker-compose up --build``` to rebuild a new version. A much faster approach is to directly modify the file on docker then restart the container/service
 
 #### NO DATA PERSISTENCE?
 open browser console and run ```localStorage.clear()```. This is because of fake user mechanism on useAuth.js

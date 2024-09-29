@@ -9,8 +9,10 @@ const SendButton = () => {
   const handleClick = () => !isStreaming && textareaRef.current.value != "" && handleSendUserMessage(textareaRef.current.value)
   
   return (
-    <button className="col-1 chat-inputs-area-button" onClick={handleClick} disabled={isStreaming}>
-      <i className="fa fa-paper-plane" aria-hidden="true"></i>
+    <button 
+      className={`col-1 chat-inputs-area-button ${isStreaming && "soft-disabled"}`} onClick={handleClick} 
+      disabled={isStreaming}
+    ><i className="fa fa-paper-plane" aria-hidden="true"></i>
     </button>
   )
 }
