@@ -13,5 +13,8 @@ $ docker-compose up
 
 3. use browser and then go to app. ~will compile at first load
 ```
-$ http://localhost:3000/spa
+$ http://localhost:3000/
 ```
+
+# CHANGED AN ENV VARIABLE?
+run ```docker-compose up --build``` to rebuild a new version
