@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useCallback, useState, useMemo, useRef, useEffect } from "react";
 import { useWsApi } from "./useWs";
-import { useChatThreads } from "./useChatThread";
+import { useChatThreads, useChatThreadsApi } from "./useChatThread";
 import { useAuth } from "./useAuth";
 
 const ChatApiContext = createContext(
@@ -19,6 +19,7 @@ export default function ChatProvider({ children }) {
   const { mockEmail } = useAuth();
   const { sendUserMessage } = useWsApi();
   const { activeChatThreadId } = useChatThreads();
+  const { setActiveChatThreadId } = useChatThreadsApi();
 
   const [messages, setMessages] = useState([]);
   const [isFetchingMessages, setIsFethingMessages] = useState(false);
@@ -66,6 +67,11 @@ export default function ChatProvider({ children }) {
     })
   }, [])
 
+  const handleNewChat = useCallback(() => {
+    setActiveChatThreadId(v => "NEW")
+    setMessages(v => [])
+  }, [])
+
   const handleSendUserMessage = useCallback(userMessage => {
     handleResetInput()
     const payload = [
@@ -83,6 +89,7 @@ export default function ChatProvider({ children }) {
   }, [])
 
   const apiValue = {
+    handleNewChat,
     handleSendUserMessage,
     handleScrollDown
   }

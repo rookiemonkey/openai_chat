@@ -38,6 +38,7 @@ body {
   height: 100vh;
   list-style-type: none;
   padding: 0;
+  padding-top: 1rem;
 }
 
 .side-nav li {
@@ -52,6 +53,7 @@ body {
 }
 
 .content {
+  position: relative;
   background-color: #212121;
   margin: 0px;
   box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.1);
@@ -90,6 +92,18 @@ body {
   color: #676767;
 }
 
+.chat-inputs-area-button-new {
+  position: absolute;
+  top: 2.5rem;
+  left: 2.5rem;
+  border: 1px solid white;
+  box-shadow: none;
+  border-radius: 100%;
+  padding: 0.20rem .5rem;
+  background-color: transparent;
+  color: white;
+}
+
 .chat-content-area {
   overflow: auto;
   height: 550px;
@@ -109,7 +123,16 @@ body {
 .chat-content-area-empty,
 .chat-content-area-loading small {
   color: #ECECEC;
+}
+
+.chat-content-area-empty small,
+.chat-content-area-loading small {
   opacity: .25;
+}
+
+.chat-content-area-empty p {
+  font-weight: 700;
+  font-size: 1.5rem;
 }
 
 .user-chat-box {
