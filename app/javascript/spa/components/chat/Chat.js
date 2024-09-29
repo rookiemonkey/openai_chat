@@ -7,7 +7,7 @@ import MessagesLoader from './MessagesLoader'
 
 const Chat = () => {
   return (
-    <div className="content p-0 pt-2 col-lg-9 col-md-12">
+    <div className="content p-0 pt-2 col-lg-10 col-md-12">
       <MessagesEmpty/>
       <MessagesLoader/>
       <Messages/>

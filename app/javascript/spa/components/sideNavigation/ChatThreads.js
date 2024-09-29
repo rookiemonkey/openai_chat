@@ -6,7 +6,7 @@ const ChatThreads = () => {
   const { chatThreads } = useChatThreads();
 
   return (
-    <ul>
+    <ul className='side-nav'>
       {
         chatThreads.map(ct => <ChatThread key={ct.id} chatThread={ct} />)
       }

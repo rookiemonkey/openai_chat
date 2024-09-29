@@ -23,9 +23,8 @@ class OpenaiChatChannel < ApplicationCable::Channel
     ) if is_chat_thread_new
 
     # # used in faking openai response stream
-    # assistant_response = test_broadcast_code(@user.email)
-    assistant_response = test_broadcast(@user.email)
-
+    assistant_response = test_broadcast_code(@user.email)
+    # assistant_response = test_broadcast(@user.email)
 
     # below can be assigned to a job instead
 
