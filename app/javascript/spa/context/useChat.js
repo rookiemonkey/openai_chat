@@ -34,7 +34,7 @@ export default function ChatProvider({ children }) {
     const url = `/api/get_chat_thread?email=${mockEmail}&chatThreadId=${activeChatThreadId}`
     fetch(encodeURI(url))
       .then(response => response.json())
-      .then(({ data }) => setMessages(data))
+      .then(({ data }) => data.length && setMessages(data))
       .finally(() => setIsFethingMessages(v => false))
 
   }, [mockEmail, activeChatThreadId])
