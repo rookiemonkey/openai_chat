@@ -22,9 +22,18 @@ class OpenaiChatChannel < ApplicationCable::Channel
       }
     ) if is_chat_thread_new
 
-    # # used in faking openai response stream
-    assistant_response = test_broadcast_code(@user.email)
-    # assistant_response = test_broadcast(@user.email)
+    if ENV["OPENAI_FAKED_STREAM"] == "true"
+      assistant_response = test_broadcast_code(@user.email)
+    else
+      current_thread = chat_thread.serialized_conversation_info
+      current_thread << { role: "user", content: data["message"] }
+
+      stream_proc = Proc.new do |chunk|
+        OpenaiChatChannel.broadcast_to(@user, message: chunk)
+      end
+
+      assistant_response = OpenaiInteractionService.instance.send_messages(current_thread, stream_proc)
+    end
 
     # below can be assigned to a job instead
 

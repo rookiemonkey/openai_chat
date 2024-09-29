@@ -1,6 +1,6 @@
 class ChatThread < ApplicationRecord
   belongs_to :user
-  has_many :chat_messages
+  has_many :chat_messages, dependent: :destroy 
 
   def serialized_info
     {
