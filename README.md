@@ -16,5 +16,8 @@ $ docker-compose up
 $ http://localhost:3000/
 ```
 
-# CHANGED AN ENV VARIABLE?
+#### CHANGED AN ENV VARIABLE?
 run ```docker-compose up --build``` to rebuild a new version
+
+#### NO DATA PERSISTENCE?
+open browser console and run ```localStorage.clear()```. This is because of fake user mechanism on useAuth.js
