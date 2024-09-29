@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown"
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { materialDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import SyntaxHighlighterStyle from './SyntaxHighlighterStyle'
 import { useWsApi } from "../../context/useWs";
 import { useChatApi, useChatMessages } from "../../context/useChat";
 import { useChatThreadsApi } from "../../context/useChatThread";
@@ -57,7 +57,7 @@ const AssistantMessage = ({ message = "" }) => {
               const match = /language-(\w+)/.exec(className || '');
               return !inline && match ? (
                 <SyntaxHighlighter
-                  style={materialDark}
+                  style={SyntaxHighlighterStyle}
                   language={match[1]}
                   PreTag="div"
                   showLineNumbers={false}
