@@ -10,7 +10,7 @@ const WsApiContext = createContext(
 );
 
 export default function WsProvider({ children }) {
-  const { mockEmail } = useAuth()
+  const { mockEmail, sessionId } = useAuth()
   const ws = new WebSocket("ws://localhost:3000/cable")
 
   useEffect(() => {
@@ -25,6 +25,7 @@ export default function WsProvider({ children }) {
         identifier: JSON.stringify(
           {
             channel: "OpenaiChatChannel",
+            sessionId,
             email: mockEmail
           }
         )
@@ -39,6 +40,7 @@ export default function WsProvider({ children }) {
         identifier: JSON.stringify(
           {
             channel: "OpenaiChatChannel",
+            sessionId,
             email: mockEmail
           }
         )
@@ -53,6 +55,7 @@ export default function WsProvider({ children }) {
         identifier: JSON.stringify(
           {
             channel: "OpenaiChatChannel",
+            sessionId,
             email: mockEmail
           }
         ),
@@ -73,11 +76,20 @@ export default function WsProvider({ children }) {
     ) => {
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
+        if (data?.type === "ping") return null;
+
         const message = data?.message?.message
-        assistantMessageHandler(message)
-        serverActionHandler(message)
+        const identifier = data?.message?.message?.session_id
+        if (identifier !== sessionId) return null;
+
+        const assistantMessage = message?.message
+        if (assistantMessage) assistantMessageHandler(assistantMessage)
+
+        const serverAction = message?.server_action
+        if (serverAction) serverActionHandler(message)
       };
-    }
+    },
+    [sessionId]
   )
 
   return (

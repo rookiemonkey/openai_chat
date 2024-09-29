@@ -1,4 +1,5 @@
 import React, { createContext, useContext } from "react";
+import getRandomId from "../../utilities/getRandomId";
 
 const AuthContext = createContext(
   {}
@@ -7,15 +8,16 @@ const AuthContext = createContext(
 export default function AuthProvider({ children }) {
 
   // new mockEmail on initial connect, store the next connection unless in incognito
-  let mockEmail = localStorage.getItem("mockEmail")
+  let mockEmail = localStorage.getItem("mockEmail");
+  const sessionId = getRandomId();
 
   if (!mockEmail) {
-    mockEmail = `mockuser__${Math.random().toString(36).substring(2, 15)}@gmail.com`
+    mockEmail = `mockuser__${getRandomId()}@gmail.com`
     localStorage.setItem("mockEmail", mockEmail)
   }
 
   return (
-    <AuthContext.Provider value={{ mockEmail }}>
+    <AuthContext.Provider value={{ mockEmail, sessionId }}>
       {children}
     </AuthContext.Provider>
   );

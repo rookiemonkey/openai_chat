@@ -11,25 +11,30 @@ class OpenaiChatChannel < ApplicationCable::Channel
   end
 
   def receive(data)
+    session_id =  params["sessionId"]
     is_chat_thread_new = data["chatThreadId"] == "NEW"
     chat_thread = get_chat_thread(data["chatThreadId"])
 
     OpenaiChatChannel.broadcast_to(
       @user, 
       message: { 
+        session_id: session_id, 
         server_action: "chatthread_created", 
         chat_thread: chat_thread.serialized_info
       }
     ) if is_chat_thread_new
 
     if ENV["OPENAI_FAKED_STREAM"] == "true"
-      assistant_response = test_broadcast_code(@user.email)
+      assistant_response = test_broadcast_code(@user.email, session_id)
     else
       current_thread = chat_thread.serialized_conversation_info
       current_thread << { role: "user", content: data["message"] }
 
       stream_proc = Proc.new do |chunk|
-        OpenaiChatChannel.broadcast_to(@user, message: chunk)
+        OpenaiChatChannel.broadcast_to(@user, message: { 
+          session_id: session_id, 
+          message: chunk
+        })
       end
 
       assistant_response = OpenaiInteractionService.instance.send_messages(current_thread, stream_proc)

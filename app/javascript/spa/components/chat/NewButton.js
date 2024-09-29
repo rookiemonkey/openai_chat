@@ -15,7 +15,7 @@ const NewButton = () => {
     <button 
       className={`chat-inputs-area-button-new ${isStreaming && "soft-disabled"}`} onClick={handleClick} 
       disabled={isStreaming}
-    ><i class="fas fa-plus"></i>
+    ><i className="fas fa-plus"></i>
     </button>
   )
 }

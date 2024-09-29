@@ -27,3 +27,6 @@ run ```docker-compose up --build``` to rebuild a new version. A much faster appr
 
 #### NO DATA PERSISTENCE?
 open browser console and run ```localStorage.clear()```. This is because of fake user mechanism on useAuth.js
+
+# TODOS
+1. trigger a chat then refresh the browser, an empty thread will appear. Perhaps add a new column that can tag the thread to determine if the stream is done or not. on FE, show a loader if accessed by user.

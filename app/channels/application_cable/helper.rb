@@ -1,6 +1,6 @@
 module ApplicationCable
   module Helper
-    def test_broadcast(target_user_email)
+    def test_broadcast(target_user_email, session_id)
       target_user = User.find_by(email: target_user_email)
       assistant_message = ""
       [
@@ -23,9 +23,15 @@ module ApplicationCable
         content = chunk.dig("choices", 0, "delta", "content")
         finish_reason = chunk.dig("choices", 0, "finish_reason")
         if finish_reason == "stop"
-          OpenaiChatChannel.broadcast_to(target_user, message: "ENDOFSTREAM")
+          OpenaiChatChannel.broadcast_to(target_user, message: {
+            session_id: session_id,
+            message: "ENDOFSTREAM"
+          })
         else
-          OpenaiChatChannel.broadcast_to(target_user, message: content)
+          OpenaiChatChannel.broadcast_to(target_user, message: {
+            session_id: session_id,
+            message: content
+          })
           assistant_message << (content.nil? ? "" : content)
           sleep 0.05
         end
@@ -33,7 +39,7 @@ module ApplicationCable
       assistant_message
     end
 
-    def test_broadcast_code(target_user_email)
+    def test_broadcast_code(target_user_email, session_id)
       target_user = User.find_by(email: target_user_email)
       assistant_message = ""
       [
@@ -224,9 +230,15 @@ module ApplicationCable
         content = chunk.dig("choices", 0, "delta", "content")
         finish_reason = chunk.dig("choices", 0, "finish_reason")
         if finish_reason == "stop"
-          OpenaiChatChannel.broadcast_to(target_user, message: "ENDOFSTREAM")
+          OpenaiChatChannel.broadcast_to(target_user, message: {
+            session_id: session_id,
+            message: "ENDOFSTREAM"
+          })
         else
-          OpenaiChatChannel.broadcast_to(target_user, message: content)
+          OpenaiChatChannel.broadcast_to(target_user, message: {
+            session_id: session_id,
+            message: content
+          })
           assistant_message << (content.nil? ? "" : content)
           sleep 0.05
         end
