@@ -9,4 +9,5 @@ Rails.application.routes.draw do
 
   # expose api
   get "/api/get_chat_threads", to: "api#get_chat_threads"
+  get "/api/get_chat_thread", to: "api#get_chat_thread"
 end

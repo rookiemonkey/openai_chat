@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useCallback, useState, useMemo, useRef } from "react";
+import React, { createContext, useContext, useCallback, useState, useMemo, useRef, useEffect } from "react";
 import { useWsApi } from "./useWs";
 import { useChatThreads } from "./useChatThread";
+import { useAuth } from "./useAuth";
 
 const ChatApiContext = createContext(
   {}
@@ -15,13 +16,28 @@ const ChatNewUserMessageContext = createContext(
 );
 
 export default function ChatProvider({ children }) {
+  const { mockEmail } = useAuth();
   const { sendUserMessage } = useWsApi();
   const { activeChatThreadId } = useChatThreads();
+
   const [messages, setMessages] = useState([]);
+  const [isFetchingMessages, setIsFethingMessages] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
 
   const textareaRef = useRef(HTMLTextAreaElement)
   const [newUserMessage, setNewUserMessage] = useState("")
+
+  useEffect(() => {
+    if (activeChatThreadId === "NEW" || !mockEmail) return function(){}
+
+    setIsFethingMessages(v => true)
+    const url = `/api/get_chat_thread?email=${mockEmail}&chatThreadId=${activeChatThreadId}`
+    fetch(encodeURI(url))
+      .then(response => response.json())
+      .then(({ data }) => setMessages(data))
+      .finally(() => setIsFethingMessages(v => false))
+
+  }, [mockEmail, activeChatThreadId])
 
   const memoizedNewUserMessage = useMemo(
     () => ({
@@ -34,12 +50,13 @@ export default function ChatProvider({ children }) {
 
   const memoizedMessages = useMemo(
     () => ({
+      isFetchingMessages,
       messages,
       setMessages,
       isStreaming,
       setIsStreaming
     }),
-    [messages, isStreaming]
+    [messages, isStreaming, isFetchingMessages]
   )
 
   const handleResetInput = useCallback(() => {

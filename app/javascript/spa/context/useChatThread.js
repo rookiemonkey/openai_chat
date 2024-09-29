@@ -20,7 +20,6 @@ export default function ChatThreadProvider({ children }) {
       .then(({ data }) => setChatThreads(data))
   }, [])
 
-
   const apiValue = {
     setActiveChatThreadId,
     setChatThreads
