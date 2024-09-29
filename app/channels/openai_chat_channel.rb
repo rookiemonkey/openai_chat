@@ -11,8 +11,21 @@ class OpenaiChatChannel < ApplicationCable::Channel
   end
 
   def receive(data)
+    is_chat_thread_new = data["chatThreadId"] == "NEW"
     chat_thread = get_chat_thread(data["chatThreadId"])
-    assistant_response = test_broadcast_code(@user.email)
+
+    OpenaiChatChannel.broadcast_to(
+      @user, 
+      message: { 
+        server_action: "chatthread_created", 
+        chat_thread: chat_thread.serialized_info
+      }
+    ) if is_chat_thread_new
+
+    # # used in faking openai response stream
+    # assistant_response = test_broadcast_code(@user.email)
+    assistant_response = test_broadcast(@user.email)
+
 
     # below can be assigned to a job instead
 

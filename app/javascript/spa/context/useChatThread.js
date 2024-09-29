@@ -5,8 +5,13 @@ const ChatThreadContext = createContext(
   {}
 );
 
+const ChatThreadApiContext = createContext(
+  {}
+);
+
 export default function ChatThreadProvider({ children }) {
   const { mockEmail } = useAuth()
+  const [activeChatThreadId, setActiveChatThreadId] = useState("NEW")
   const [chatThreads, setChatThreads] = useState([])
 
   useEffect(() => {
@@ -15,13 +20,25 @@ export default function ChatThreadProvider({ children }) {
       .then(({ data }) => setChatThreads(data))
   }, [])
 
+
+  const apiValue = {
+    setActiveChatThreadId,
+    setChatThreads
+  }
+
   return (
-    <ChatThreadContext.Provider value={{ chatThreads }}>
-      {children}
+    <ChatThreadContext.Provider value={{ activeChatThreadId, chatThreads }}>
+      <ChatThreadApiContext.Provider value={apiValue}>
+        {children}
+      </ChatThreadApiContext.Provider>
     </ChatThreadContext.Provider>
   );
 }
 
-export function useChatThread() {
+export function useChatThreads() {
   return useContext(ChatThreadContext);
+}
+
+export function useChatThreadsApi() {
+  return useContext(ChatThreadApiContext);
 }

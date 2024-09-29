@@ -1,9 +1,9 @@
 import React from 'react';
 import ChatThread from './ChatThread';
-import { useChatThread } from '../../context/useChatThread';
+import { useChatThreads } from '../../context/useChatThread';
 
 const ChatThreads = () => {
-  const { chatThreads } = useChatThread();
+  const { chatThreads } = useChatThreads();
 
   return (
     <ul>

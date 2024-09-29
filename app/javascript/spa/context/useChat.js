@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useCallback, useState, useMemo, useRef } from "react";
 import { useWsApi } from "./useWs";
+import { useChatThreads } from "./useChatThread";
 
 const ChatApiContext = createContext(
   {}
@@ -14,7 +15,8 @@ const ChatNewUserMessageContext = createContext(
 );
 
 export default function ChatProvider({ children }) {
-  const { sendUserMessage, receiveAssistantMessage } = useWsApi();
+  const { sendUserMessage } = useWsApi();
+  const { activeChatThreadId } = useChatThreads();
   const [messages, setMessages] = useState([]);
   const [isStreaming, setIsStreaming] = useState(false);
 
@@ -55,9 +57,8 @@ export default function ChatProvider({ children }) {
     ]
     setMessages(v => [...v, ...payload])
     setIsStreaming(v => true)
-
-    sendUserMessage({ message: userMessage })
-  }, [])
+    sendUserMessage({ message: userMessage, chatThreadId: activeChatThreadId })
+  }, [activeChatThreadId])
 
 
   const apiValue = {

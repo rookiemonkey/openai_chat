@@ -46,7 +46,7 @@ export default function WsProvider({ children }) {
     ))
   }, [ws])
 
-  const sendUserMessage = useCallback(({ message, chatThreadId = "NEW" }) => {
+  const sendUserMessage = useCallback(({ message, chatThreadId }) => {
     ws.send(JSON.stringify(
       {
         command: "message",
@@ -66,13 +66,19 @@ export default function WsProvider({ children }) {
     ))
   }, [ws])
 
-  const receiveAssistantMessage = useCallback(handler => {
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      const assistantMessage = data?.message?.message
-      handler(assistantMessage)
-    };
-  })
+  const receiveAssistantMessage = useCallback(
+    (
+      assistantMessageHandler,
+      serverActionHandler,
+    ) => {
+      ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        const message = data?.message?.message
+        assistantMessageHandler(message)
+        serverActionHandler(message)
+      };
+    }
+  )
 
   return (
     <WsContext.Provider value={ws}>

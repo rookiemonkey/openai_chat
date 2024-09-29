@@ -4,9 +4,11 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { materialDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { useWsApi } from "../../context/useWs";
 import { useChatMessages } from "../../context/useChat";
+import { useChatThreadsApi } from "../../context/useChatThread";
 
 const AssistantMessage = ({ message = "" }) => {
   const { receiveAssistantMessage } = useWsApi();
+  const { setChatThreads, setActiveChatThreadId } = useChatThreadsApi();
   const { setIsStreaming } = useChatMessages();
 
   const [finalMessage, setFinalMessage] = useState(message)
@@ -15,17 +17,28 @@ const AssistantMessage = ({ message = "" }) => {
   useEffect(() => {
     if (message) return function(){}
 
-    const assistantMessageHandler = assistantMessage => {
-      if (assistantMessage && assistantMessage !== "ENDOFSTREAM") {
-        setStreamingMessage(v => v + assistantMessage)
+    const assistantMessageHandler = wsMessage => {
+      if (wsMessage?.server_action) return null;
+      if (wsMessage && wsMessage !== "ENDOFSTREAM") {
+        setStreamingMessage(v => v + wsMessage)
       }
-      if (assistantMessage === "ENDOFSTREAM") {
+      if (wsMessage === "ENDOFSTREAM") {
         setIsStreaming(v => false)
-        setFinalMessage(streamingMessage)
+        setFinalMessage(v => streamingMessage)
       }
     }
 
-    receiveAssistantMessage(assistantMessageHandler)
+    const serverActionHandler = wsMessage => {
+      if (!wsMessage?.server_action) return null;
+      console.warn("SERVER ACTION PERFOMED: ", wsMessage)
+
+      if (wsMessage.server_action == "chatthread_created"){
+        setChatThreads(v => [wsMessage.chat_thread, ...v])
+        setActiveChatThreadId(v => wsMessage.chat_thread.id)
+      }
+    }
+
+    receiveAssistantMessage(assistantMessageHandler, serverActionHandler)
   }, [])
 
   return (
@@ -35,7 +48,7 @@ const AssistantMessage = ({ message = "" }) => {
       </div>
       <div className="chat-txt">
         <ReactMarkdown
-          key={message.length}
+          key={message ? finalMessage.length : streamingMessage.length}
           breaks
           components={{
             code({ node, inline, className, children, ...props }) {
