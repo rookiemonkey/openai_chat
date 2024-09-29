@@ -26,7 +26,7 @@ module ApplicationCable
           OpenaiChatChannel.broadcast_to(target_user, message: "ENDOFSTREAM")
         else
           OpenaiChatChannel.broadcast_to(target_user, message: content)
-          assistant_message << (content.present? ? content : "")
+          assistant_message << (content.nil? ? "" : content)
           sleep 0.05
         end
       end
@@ -227,7 +227,7 @@ module ApplicationCable
           OpenaiChatChannel.broadcast_to(target_user, message: "ENDOFSTREAM")
         else
           OpenaiChatChannel.broadcast_to(target_user, message: content)
-          assistant_message << (content.present? ? content : "")
+          assistant_message << (content.nil? ? "" : content)
           sleep 0.05
         end
       end
