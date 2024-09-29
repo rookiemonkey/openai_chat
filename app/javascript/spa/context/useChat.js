@@ -77,9 +77,14 @@ export default function ChatProvider({ children }) {
     sendUserMessage({ message: userMessage, chatThreadId: activeChatThreadId })
   }, [activeChatThreadId])
 
+  const handleScrollDown = useCallback(() => {
+    const container = document.querySelector(".chat-content-area")
+    container.scrollTop = container.scrollHeight;
+  }, [])
 
   const apiValue = {
-    handleSendUserMessage
+    handleSendUserMessage,
+    handleScrollDown
   }
 
   return (

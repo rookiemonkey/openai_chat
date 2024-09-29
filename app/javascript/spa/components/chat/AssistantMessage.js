@@ -3,12 +3,13 @@ import ReactMarkdown from "react-markdown"
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { materialDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { useWsApi } from "../../context/useWs";
-import { useChatMessages } from "../../context/useChat";
+import { useChatApi, useChatMessages } from "../../context/useChat";
 import { useChatThreadsApi } from "../../context/useChatThread";
 
 const AssistantMessage = ({ message = "" }) => {
   const { receiveAssistantMessage } = useWsApi();
   const { setChatThreads, setActiveChatThreadId } = useChatThreadsApi();
+  const { handleScrollDown } = useChatApi();
   const { setIsStreaming } = useChatMessages();
 
   const [finalMessage, setFinalMessage] = useState(message)
@@ -21,6 +22,7 @@ const AssistantMessage = ({ message = "" }) => {
       if (wsMessage?.server_action) return null;
       if (wsMessage && wsMessage !== "ENDOFSTREAM") {
         setStreamingMessage(v => v + wsMessage)
+        handleScrollDown()
       }
       if (wsMessage === "ENDOFSTREAM") {
         setIsStreaming(v => false)
