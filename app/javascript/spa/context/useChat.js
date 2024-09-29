@@ -22,6 +22,8 @@ export default function ChatProvider({ children }) {
   const { setActiveChatThreadId } = useChatThreadsApi();
 
   const [messages, setMessages] = useState([]);
+  const [isStillStreaming, setIsStillStreaming] = useState(false);
+  const [isFetchingMessagesLocked, setIsFetchingMessagesLocked] = useState(true);
   const [isFetchingMessages, setIsFethingMessages] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
 
@@ -29,13 +31,20 @@ export default function ChatProvider({ children }) {
   const [newUserMessage, setNewUserMessage] = useState("")
 
   useEffect(() => {
-    if (activeChatThreadId === "NEW" || !mockEmail) return function(){}
+    if (
+      activeChatThreadId === "NEW" ||
+      !mockEmail ||
+      isFetchingMessagesLocked
+    ) return function(){}
 
     setIsFethingMessages(v => true)
     const url = `/api/get_chat_thread?email=${mockEmail}&chatThreadId=${activeChatThreadId}`
     fetch(encodeURI(url))
       .then(response => response.json())
-      .then(({ data }) => data.length && setMessages(data))
+      .then(({ data, isStillStreaming: _isStillStreaming }) => {
+        setIsStillStreaming(v => _isStillStreaming);
+        data.length && setMessages(data)
+      })
       .finally(() => setIsFethingMessages(v => false))
 
   }, [mockEmail, activeChatThreadId])
@@ -51,13 +60,15 @@ export default function ChatProvider({ children }) {
 
   const memoizedMessages = useMemo(
     () => ({
+      isStillStreaming,
       isFetchingMessages,
+      setIsFetchingMessagesLocked,
       messages,
       setMessages,
       isStreaming,
       setIsStreaming
     }),
-    [messages, isStreaming, isFetchingMessages]
+    [messages, isStreaming, isFetchingMessages, isStillStreaming]
   )
 
   const handleResetInput = useCallback(() => {
@@ -70,6 +81,10 @@ export default function ChatProvider({ children }) {
   const handleNewChat = useCallback(() => {
     setActiveChatThreadId(v => "NEW")
     setMessages(v => [])
+    setIsStillStreaming(v => false)
+    setIsFethingMessages(v => false)
+    setIsFetchingMessagesLocked(v => true)
+    setIsStreaming(v => false)
   }, [])
 
   const handleSendUserMessage = useCallback(userMessage => {

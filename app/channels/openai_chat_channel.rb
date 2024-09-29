@@ -15,6 +15,8 @@ class OpenaiChatChannel < ApplicationCable::Channel
     is_chat_thread_new = data["chatThreadId"] == "NEW"
     chat_thread = get_chat_thread(data["chatThreadId"])
 
+    chat_thread.update(is_streaming: true)
+
     OpenaiChatChannel.broadcast_to(
       @user, 
       message: { 
@@ -54,6 +56,8 @@ class OpenaiChatChannel < ApplicationCable::Channel
       message: assistant_response,
       created_at: user_cm.created_at + 1
     )
+
+    chat_thread.update(is_streaming: false)
   end
 
   private

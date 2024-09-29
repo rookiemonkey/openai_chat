@@ -12,7 +12,8 @@ class ApiController < ApplicationController
   def get_chat_thread
     chat_thread = ChatThread.find_by(user_id: current_user.id, id: params[:chatThreadId])
     render json: {
-      data: chat_thread.serialized_conversation_info
+      data: chat_thread.serialized_conversation_info,
+      isStillStreaming: chat_thread.is_streaming
     }
   end
 

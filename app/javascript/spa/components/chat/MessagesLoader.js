@@ -5,9 +5,9 @@ import Spinner from "../Spinner";
 
 const MessagesLoader = () => {
   const { activeChatThreadId } = useChatThreads();
-  const { isFetchingMessages } = useChatMessages();
+  const { isFetchingMessages, isStillStreaming } = useChatMessages();
 
-  const isLoading = isFetchingMessages && activeChatThreadId !== "NEW"
+  const isLoading = (isFetchingMessages || isStillStreaming) && activeChatThreadId !== "NEW"
 
   if (!isLoading) return null;
 
@@ -16,7 +16,8 @@ const MessagesLoader = () => {
       <Spinner size={25} />
       <br/>
       <small>
-        Retrieving your conversation
+        {isFetchingMessages && "Retrieving your conversation"}
+        {isStillStreaming && "AI is still generating messages. Please come back later!"}
       </small>
     </div>
   )
