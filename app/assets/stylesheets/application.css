@@ -75,6 +75,13 @@ body {
   color: #ECECEC;
   resize: none;
   white-space: pre;
+  padding-top: 22px
+}
+
+.chat-inputs-container textarea::placeholder {
+  display: block;
+  height: 100%;
+  line-height: 1.5rem;
 }
 
 .chat-inputs-area-inner {
@@ -109,6 +116,11 @@ body {
   height: 550px;
   overflow-x: hidden;
   padding: 0 150px;
+}
+
+.chat-content-area .user-chat-box,
+.chat-content-area .gpt-chat-box {
+  margin-bottom: 0.5rem;
 }
 
 .chat-content-area-empty,
@@ -149,7 +161,8 @@ body {
 }
 
 .chat-icon {
-  margin-bottom: 5px;
+  margin-bottom: 1rem;
+  opacity: .25;
 }
 
 .react-syntax-highlighter-line-number {
@@ -177,17 +190,20 @@ body {
   }
 }
 
+textarea::-webkit-scrollbar,
 .side-nav::-webkit-scrollbar,
 .chat-content-area::-webkit-scrollbar {
   width: var(--sb-size)
 }
 
+textarea::-webkit-scrollbar-track,
 .side-nav::-webkit-scrollbar-track,
 .chat-content-area::-webkit-scrollbar-track {
   background: var(--sb-track-color);
   border-radius: 3px;
 }
 
+textarea::-webkit-scrollbar-thumb,
 .side-nav::-webkit-scrollbar-thumb,
 .chat-content-area::-webkit-scrollbar-thumb {
   background: var(--sb-thumb-color);
@@ -196,6 +212,7 @@ body {
 }
 
 @supports not selector(::-webkit-scrollbar) {
+  textarea,
   .side-nav,
   .chat-content-area {
     scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);

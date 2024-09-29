@@ -46,7 +46,7 @@ const AssistantMessage = ({ message = "" }) => {
   return (
     <div className="row gpt-chat-box">
       <div className="chat-icon">
-        <i className="fa fa-laptop" aria-hidden="true"></i>
+        <i className="fa fa-laptop" aria-hidden="true"></i> <b>OpenAI</b>
       </div>
       <div className="chat-txt">
         <ReactMarkdown
