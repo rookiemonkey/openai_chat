@@ -5,14 +5,15 @@ import { useChatMessages } from '../../context/useChat';
 const ChatThread = ({ chatThread }) => {
   const { activeChatThreadId } = useChatThreads();
   const { setActiveChatThreadId } = useChatThreadsApi();
-  const { isStreaming } = useChatMessages();
+  const { setIsFetchingMessagesLocked, isStreaming } = useChatMessages();
 
   const isActive = activeChatThreadId == chatThread.id
 
   const handleClick = e => {
     e.preventDefault()
     if (isStreaming) return null;
-    setActiveChatThreadId(chatThread?.id)
+    setIsFetchingMessagesLocked(v => false)
+    setActiveChatThreadId(v => chatThread?.id)
   } 
 
   return (

@@ -7,13 +7,13 @@ import { useChatThreads } from '../../context/useChatThread';
 const Messages = () => {
   const { activeChatThreadId } = useChatThreads();
   const { handleScrollDown } = useChatApi();
-  const { messages, isFetchingMessages } = useChatMessages();
+  const { messages, isFetchingMessages, isStillStreaming } = useChatMessages();
 
   useEffect(() => {
     handleScrollDown()
   }, [messages])
 
-  if (isFetchingMessages) return null;
+  if (isFetchingMessages || isStillStreaming) return null;
   if (activeChatThreadId === "NEW" && !messages.length) return null;
 
   return (
