@@ -1,3 +1,6 @@
+# OpenAi Chat 
+![Screenshot](./screenshot.png)
+
 # REQUIREMENTS
 1. docker
 2. docker-compose
